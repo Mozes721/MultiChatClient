@@ -4,24 +4,21 @@ import streamlit as st
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from model.bart_llm import BartLLM
+from model.llm import LLM
 
 class LocalBot:
     def __init__(self) -> None:
         self.initialize_session_state()
-        self.bart_llm = BartLLM()
-        st.title("Simple chat")
+        self.bart_llm = LLM
+        st.title("Stock, Crypto, and Weather Bot")
 
     def initialize_session_state(self):
         if "messages" not in st.session_state:
             st.session_state.messages = []
 
     def classify_query(self, query: str) -> str:
-        """
-        Classify the user's query and return the category.
-        """
-        category = self.bart_llm.classify_query(query)
-        return f"Query classified as: {category}"
+        response = self.bart_llm.generate_response(query)
+        return response
 
     def display_chat_history(self):
         for message in st.session_state.messages:

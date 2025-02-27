@@ -1,11 +1,11 @@
 from discord import Intents, Client, Message
 from config.config_files import APIkeys
-from model.bart_llm import BartLLM
+from model.llm import LLM
 
 class DiscordBot:
     def __init__(self, bot_service):
         self.bot_service = bot_service
-        self.bart_llm = BartLLM()
+        self.bart_llm = LLM
         self.client = Client(intents=Intents.default())
       
         self.register_events()
@@ -24,9 +24,8 @@ class DiscordBot:
             await self.send_message(message, user_message)
 
     def get_response(self, user_message: str) -> str:
-        categories = ["crypto", "stock", "weather"]
-        category = self.bart_llm.classify_query(user_message, categories)
-        return f"Query classified as: {category}"
+        response = self.bart_llm.generate_response(user_message)
+        return response
 
     async def send_message(self, message: Message, user_message: str) -> None:
         if not user_message:
