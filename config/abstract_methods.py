@@ -1,31 +1,17 @@
 from abc import ABC, abstractmethod
 
 
-class APIMethods(ABC):
-
+class LLMMethods(ABC):
     @abstractmethod
-    def say_hello(self) -> None:
-        pass
-
-    @abstractmethod
-    def get_weather(self) -> None:
-        pass
-
-    @abstractmethod
-    def get_crypto(self) -> None:
-        pass
-
-    @abstractmethod
-    def get_stock(self) -> None:
+    def generate(self, query: str) -> str:
         pass
 
 
-class BotMethods(APIMethods):
+class BotMethods(ABC):
+    @abstractmethod
+    def get_response(self, user_message: str) -> str:
+        pass
     
     @abstractmethod
-    def receve_response(self) -> None:
-        pass
-
-    @abstractmethod
-    def post_hello(self) -> None:
+    def run(self) -> None:
         pass

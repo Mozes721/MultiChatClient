@@ -4,21 +4,22 @@ import streamlit as st
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
+from config.abstract_methods import BotMethods
 from model.llm import LLM
 
-class LocalBot:
+class LocalBot(BotMethods):
     def __init__(self) -> None:
         self.initialize_session_state()
-        self.bart_llm = LLM
+        self.llm = LLM()  # LLM handles classification, RAG, and response generation
         st.title("Stock, Crypto, and Weather Bot")
 
     def initialize_session_state(self):
         if "messages" not in st.session_state:
             st.session_state.messages = []
 
-    def classify_query(self, query: str) -> str:
-        response = self.bart_llm.generate_response(query)
-        return response
+    def get_response(self, user_message: str) -> str:
+        """Generate response - LLM handles everything."""
+        return self.llm.generate(user_message)
 
     def display_chat_history(self):
         for message in st.session_state.messages:
@@ -36,8 +37,8 @@ class LocalBot:
             with st.chat_message("user"):
                 st.markdown(prompt)
 
-            # Classify the query and generate a response
-            response = self.classify_query(prompt)
+            # Generate response from LLM
+            response = self.get_response(prompt)
             with st.chat_message("assistant"):
                 st.markdown(response)
             st.session_state.messages.append({"role": "assistant", "content": response})

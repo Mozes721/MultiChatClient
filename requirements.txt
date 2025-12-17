@@ -52,3 +52,6 @@ yarl==1.9.4
 pylint==3.2.5
 torch==2.5.0
 transformers==4.13.0
+sentence-transformers
+pinecone-client
+yfinance==0.2.54

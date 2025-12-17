@@ -1,13 +1,14 @@
 from discord import Intents, Client, Message
 from config.config_files import APIkeys
+from config.abstract_methods import BotMethods
 from model.llm import LLM
 
-class DiscordBot:
-    def __init__(self, bot_service):
-        self.bot_service = bot_service
-        self.bart_llm = LLM
-        self.client = Client(intents=Intents.default())
-      
+class DiscordBot(BotMethods):
+    def __init__(self):
+        self.llm = LLM()
+        intents = Intents.default()
+        intents.message_content = True
+        self.client = Client(intents=intents)
         self.register_events()
 
     def register_events(self):
@@ -19,13 +20,12 @@ class DiscordBot:
         async def on_message(message: Message):
             if message.author == self.client.user:
                 return
-
             user_message = message.content
             await self.send_message(message, user_message)
 
     def get_response(self, user_message: str) -> str:
-        response = self.bart_llm.generate_response(user_message)
-        return response
+        """Generate response - LLM handles everything."""
+        return self.llm.generate(user_message)
 
     async def send_message(self, message: Message, user_message: str) -> None:
         if not user_message:
